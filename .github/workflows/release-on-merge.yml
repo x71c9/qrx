@@ -1,0 +1,15 @@
+---
+name: Release on PR Merge
+on:
+  pull_request:
+    types: [closed]
+    branches: [master]
+permissions:
+  contents: write
+jobs:
+  release:
+    uses: x71c9/ci-rust/.github/workflows/release-on-merge.yml@master
+    with:
+      repo: ${{ github.event.repository.name }}
+    secrets:
+      CI_DISPATCH_TOKEN: ${{ secrets.CI_DISPATCH_TOKEN }}

@@ -1,0 +1,21 @@
+[package]
+name = "PKGCRATE"
+version = "0.1.0"
+authors = ["x71c9 <mail@x71c9.com>"]
+edition = "2024"
+description = "One-line description of what this tool does"
+repository = "https://github.com/x71c9/PKGBIN"
+license = "MIT"
+
+# Uncomment if binary name differs from crate name
+# [[bin]]
+# name = "PKGBIN"
+# path = "src/main.rs"
+
+[dependencies]
+
+[package.metadata.release]
+push = true
+publish = true
+tag-message = "chore(release): v{{version}}"
+pre-release-commit-message = "chore(release): release v{{version}}"
