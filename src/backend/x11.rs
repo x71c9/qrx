@@ -106,6 +106,13 @@ fn select_region(
     x11rb::NONE,
     x11rb::CURRENT_TIME,
   )?;
+  conn.grab_keyboard(
+    false,
+    win,
+    x11rb::CURRENT_TIME,
+    GrabMode::ASYNC,
+    GrabMode::ASYNC,
+  )?;
   conn.flush()?;
 
   let gc = conn.generate_id()?;
@@ -180,6 +187,7 @@ fn select_region(
   }
 
   conn.ungrab_pointer(x11rb::CURRENT_TIME)?;
+  conn.ungrab_keyboard(x11rb::CURRENT_TIME)?;
   conn.destroy_window(win)?;
   conn.free_pixmap(bg_pixmap)?;
   conn.flush()?;
