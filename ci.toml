@@ -1,6 +1,6 @@
 # Required fields
-crate_name  = "PKGCRATE"        # name in Cargo.toml [package].name
-binary_name = "PKGBIN"          # name of the compiled binary
+crate_name  = "qrx"        # name in Cargo.toml [package].name
+binary_name = "qrx"          # name of the compiled binary
 # pkgdesc     = "One-line description of what this tool does"
 
 # AUR / NUR: space-separated runtime dependencies
