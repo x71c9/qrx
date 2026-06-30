@@ -13,8 +13,8 @@ path = "src/main.rs"
 
 [dependencies]
 anyhow = "1"
-image = { version = "0.25", default-features = false, features = ["png"] }
-rqrr = "0.8"
+image = { version = "0.25", default-features = false, features = ["png", "jpeg"] }
+rxing = { version = "0.9", default-features = false, features = ["encoding_rs", "decoders", "qrcode"] }
 
 [target.'cfg(not(target_os = "macos"))'.dependencies]
 x11rb = { version = "0.13", features = ["allow-unsafe-code"] }
