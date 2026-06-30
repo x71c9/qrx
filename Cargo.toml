@@ -1,6 +1,6 @@
 [package]
 name = "qrx"
-version = "0.1.5"
+version = "0.2.0"
 authors = ["x71c9 <mail@x71c9.com>"]
 edition = "2024"
 description = "CLI tool to capture a screen region, decode any QR code found, and copy the result to clipboard"
