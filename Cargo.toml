@@ -1,18 +1,21 @@
 [package]
-name = "PKGCRATE"
+name = "qrx"
 version = "0.1.0"
 authors = ["x71c9 <mail@x71c9.com>"]
 edition = "2024"
-description = "One-line description of what this tool does"
-repository = "https://github.com/x71c9/PKGBIN"
+description = "CLI tool to capture a screen region, decode any QR code found, and copy the result to clipboard"
+repository = "https://github.com/x71c9/qrx"
 license = "MIT"
 
-# Uncomment if binary name differs from crate name
-# [[bin]]
-# name = "PKGBIN"
-# path = "src/main.rs"
+[[bin]]
+name = "qrx"
+path = "src/main.rs"
 
 [dependencies]
+anyhow = "1"
+x11rb = { version = "0.13", features = ["allow-unsafe-code"] }
+image = { version = "0.25", default-features = false }
+rqrr = "0.8"
 
 [package.metadata.release]
 push = true
