@@ -8,11 +8,7 @@ pkgdesc     = "CLI tool to capture a screen region, decode any QR code found, an
 # nur_build_inputs = "openssl"
 
 # Extra apt packages needed to compile on Ubuntu (CI build machines)
-extra_apt_packages = "libxcb1-dev"
-
-# macOS: extra Homebrew packages and env vars needed to compile
-# macos_extra_brew = "--cask xquartz"
-# macos_extra_env  = "LIBRARY_PATH=/opt/X11/lib PKG_CONFIG_PATH=/opt/X11/lib/pkgconfig"
+extra_apt_packages = "libxcb1-dev libwayland-dev"
 
 # Shell completions: set to true if the binary exposes a `completion <shell>` subcommand
 # has_shell_completions   = "true"

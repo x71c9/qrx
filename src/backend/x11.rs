@@ -1,5 +1,6 @@
 use std::cmp::{max, min};
 
+use image::GrayImage;
 use x11rb::{
   connection::Connection,
   protocol::{
@@ -13,14 +14,36 @@ use x11rb::{
   rust_connection::RustConnection,
 };
 
-pub struct Region {
-  pub x: i16,
-  pub y: i16,
-  pub width: u16,
-  pub height: u16,
+pub struct X11Backend {
+  conn: RustConnection,
+  screen_num: usize,
 }
 
-pub fn select_region(
+impl X11Backend {
+  pub fn new() -> anyhow::Result<Self> {
+    let (conn, screen_num) = RustConnection::connect(None)?;
+    Ok(Self { conn, screen_num })
+  }
+}
+
+impl super::Backend for X11Backend {
+  fn capture(&self) -> anyhow::Result<Option<GrayImage>> {
+    let region = match select_region(&self.conn, self.screen_num)? {
+      Some(r) => r,
+      None => return Ok(None),
+    };
+    Ok(Some(screenshot(&self.conn, self.screen_num, &region)?))
+  }
+}
+
+struct Region {
+  x: i16,
+  y: i16,
+  width: u16,
+  height: u16,
+}
+
+fn select_region(
   conn: &RustConnection,
   screen_num: usize,
 ) -> anyhow::Result<Option<Region>> {
@@ -31,7 +54,6 @@ pub fn select_region(
   let depth = screen.root_depth;
   let visual = screen.root_visual;
 
-  // Snapshot the screen before opening the overlay so the user can see it
   let bg_pixmap = snapshot_to_pixmap(conn, root, sw, sh, depth)?;
 
   let win: Window = conn.generate_id()?;
@@ -86,7 +108,6 @@ pub fn select_region(
   )?;
   conn.flush()?;
 
-  // XOR GC for rubber-band rectangle: drawing twice erases
   let gc = conn.generate_id()?;
   conn.create_gc(
     gc,
@@ -97,6 +118,15 @@ pub fn select_region(
       .subwindow_mode(x11rb::protocol::xproto::SubwindowMode::INCLUDE_INFERIORS)
       .line_width(2),
   )?;
+
+  let border_gc = conn.generate_id()?;
+  conn.create_gc(
+    border_gc,
+    win,
+    &CreateGCAux::new().foreground(0x00_AA_00_00).line_width(1),
+  )?;
+  draw_rect(conn, win, border_gc, 0, 0, sw - 1, sh - 1)?;
+  conn.flush()?;
 
   let mut start: Option<(i16, i16)> = None;
   let mut last_rect: Option<(i16, i16, u16, u16)> = None;
@@ -139,6 +169,7 @@ pub fn select_region(
         }
       }
       Event::Expose(_) => {
+        draw_rect(conn, win, border_gc, 0, 0, sw - 1, sh - 1)?;
         if let Some((rx, ry, rw, rh)) = last_rect {
           draw_rect(conn, win, gc, rx, ry, rw, rh)?;
         }
@@ -167,12 +198,11 @@ fn snapshot_to_pixmap(
     .get_image(ImageFormat::Z_PIXMAP, root, 0, 0, sw, sh, !0)?
     .reply()?;
 
-  // Darken each pixel by 10% so the overlay reads as slightly dimmed
   let mut data = img.data;
   for chunk in data.chunks_mut(4) {
-    chunk[0] = (chunk[0] as f32 * 0.8) as u8; // B
-    chunk[1] = (chunk[1] as f32 * 0.8) as u8; // G
-    chunk[2] = (chunk[2] as f32 * 0.8) as u8; // R
+    chunk[0] = (chunk[0] as f32 * 0.85) as u8;
+    chunk[1] = (chunk[1] as f32 * 0.85) as u8;
+    chunk[2] = (chunk[2] as f32 * 0.85) as u8;
   }
 
   let pixmap: Pixmap = conn.generate_id()?;
@@ -196,6 +226,42 @@ fn snapshot_to_pixmap(
 
   conn.free_gc(gc)?;
   Ok(pixmap)
+}
+
+fn screenshot(
+  conn: &RustConnection,
+  screen_num: usize,
+  region: &Region,
+) -> anyhow::Result<GrayImage> {
+  let root = conn.setup().roots[screen_num].root;
+
+  let reply = conn
+    .get_image(
+      ImageFormat::Z_PIXMAP,
+      root,
+      region.x,
+      region.y,
+      region.width,
+      region.height,
+      !0,
+    )?
+    .reply()?;
+
+  let data = reply.data;
+  let w = region.width as u32;
+  let h = region.height as u32;
+  let mut gray = GrayImage::new(w, h);
+
+  for (i, pixel) in gray.pixels_mut().enumerate() {
+    let base = i * 4;
+    let b = data[base] as u32;
+    let g = data[base + 1] as u32;
+    let r = data[base + 2] as u32;
+    let luma = (r * 299 + g * 587 + b * 114) / 1000;
+    *pixel = image::Luma([luma as u8]);
+  }
+
+  Ok(gray)
 }
 
 fn rect_from_points(
