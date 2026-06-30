@@ -8,7 +8,7 @@ binary_name = "qrx"          # name of the compiled binary
 # nur_build_inputs = "openssl"
 
 # Extra apt packages needed to compile on Ubuntu (CI build machines)
-# extra_apt_packages = "libssl-dev pkg-config"
+extra_apt_packages = "libxcb1-dev"
 
 # macOS: extra Homebrew packages and env vars needed to compile
 # macos_extra_brew = "--cask xquartz"
