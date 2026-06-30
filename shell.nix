@@ -9,6 +9,7 @@ pkgs.mkShell {
     pkgs.pkg-config
     pkgs.xorg.libxcb
     pkgs.xorg.libX11
+    pkgs.wayland
   ];
   shellHook = ''
     export PATH="$PWD/scripts:$PATH"

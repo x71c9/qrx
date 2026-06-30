@@ -13,9 +13,11 @@ path = "src/main.rs"
 
 [dependencies]
 anyhow = "1"
-x11rb = { version = "0.13", features = ["allow-unsafe-code"] }
-image = { version = "0.25", default-features = false }
+image = { version = "0.25", default-features = false, features = ["png"] }
 rqrr = "0.8"
+
+[target.'cfg(not(target_os = "macos"))'.dependencies]
+x11rb = { version = "0.13", features = ["allow-unsafe-code"] }
 
 [package.metadata.release]
 push = true
