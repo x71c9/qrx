@@ -5,18 +5,18 @@
 # develop branch, sets the CI_DISPATCH_TOKEN secret, and configures branch protection.
 #
 # Usage:
-#   bash scripts/install.sh <crate-name> [binary-name]
+#   bash scripts/install <crate-name> [binary-name]
 #
 # When crate name and binary name are the same (most projects):
-#   bash scripts/install.sh mytool
+#   bash scripts/install mytool
 #
 # When they differ (e.g. crate published as "mytool-rust", binary is "mytool"):
-#   bash scripts/install.sh mytool-rust mytool
+#   bash scripts/install mytool-rust mytool
 
 set -uo pipefail
 
 if [[ $# -lt 1 || $# -gt 2 ]]; then
-  echo "usage: bash scripts/install.sh <crate-name> [binary-name]" >&2
+  echo "usage: bash scripts/install <crate-name> [binary-name]" >&2
   exit 1
 fi
 
@@ -75,10 +75,10 @@ fi
 
 echo
 echo "==> configure branch protection"
-if bash "${repo_root}/scripts/setup-branch-protection.sh"; then
+if bash "${repo_root}/scripts/setup-branch-protection"; then
   ok "branch protection applied"
 else
-  fail "setup-branch-protection.sh failed"
+  fail "setup-branch-protection failed"
 fi
 
 echo
