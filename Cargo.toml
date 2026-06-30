@@ -7,12 +7,15 @@ description = "CLI tool to capture a screen region, decode any QR code found, an
 repository = "https://github.com/x71c9/qrx"
 license = "MIT"
 
-# Uncomment if binary name differs from crate name
-# [[bin]]
-# name = "qrx"
-# path = "src/main.rs"
+[[bin]]
+name = "qrx"
+path = "src/main.rs"
 
 [dependencies]
+anyhow = "1"
+x11rb = { version = "0.13", features = ["allow-unsafe-code"] }
+image = { version = "0.25", default-features = false }
+rqrr = "0.8"
 
 [package.metadata.release]
 push = true

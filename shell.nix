@@ -6,9 +6,9 @@ pkgs.mkShell {
     pkgs.rustfmt
     pkgs.clippy
     pkgs.cargo-release
-    # Add extra system dependencies here, e.g.:
-    # pkgs.openssl
-    # pkgs.pkg-config
+    pkgs.pkg-config
+    pkgs.xorg.libxcb
+    pkgs.xorg.libX11
   ];
   shellHook = ''
     export PATH="$PWD/scripts:$PATH"
