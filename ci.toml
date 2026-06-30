@@ -5,7 +5,7 @@ pkgdesc     = "CLI tool to capture a screen region, decode any QR code found, an
 
 # AUR / NUR: space-separated runtime dependencies
 # aur_depends      = "'glibc' 'openssl'"
-# nur_build_inputs = "openssl"
+nur_build_inputs = "xorg.libxcb"
 
 # Extra apt packages needed to compile on Ubuntu (CI build machines)
 extra_apt_packages = "libxcb1-dev libwayland-dev"
