@@ -28,6 +28,10 @@ fn parse_args() -> anyhow::Result<Args> {
         print = true;
         no_clipboard = true;
       }
+      "-v" | "--version" => {
+        println!("{}", env!("CARGO_PKG_VERSION"));
+        std::process::exit(0);
+      }
       s if s.starts_with('-') => anyhow::bail!("unknown flag: {s}"),
       _ => file = Some(std::path::PathBuf::from(&arg)),
     }
