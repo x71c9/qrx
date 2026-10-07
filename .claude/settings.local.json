@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cargo fetch *)",
+      "Read(//home/x71c9/depositi/aur-qrx/**)"
+    ]
+  }
+}

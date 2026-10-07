@@ -7,8 +7,8 @@ pkgs.mkShell {
     pkgs.clippy
     pkgs.cargo-release
     pkgs.pkg-config
-    pkgs.xorg.libxcb
-    pkgs.xorg.libX11
+    pkgs.libxcb
+    pkgs.libx11
     pkgs.wayland
   ];
   shellHook = ''
