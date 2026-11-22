@@ -5,7 +5,6 @@ pkgs.mkShell {
     pkgs.rustc
     pkgs.rustfmt
     pkgs.clippy
-    pkgs.cargo-release
     pkgs.pkg-config
     pkgs.libxcb
     pkgs.libx11
