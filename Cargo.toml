@@ -3,6 +3,7 @@ name = "qrx"
 version = "0.4.4"
 authors = ["x71c9 <mail@x71c9.com>"]
 edition = "2024"
+rust-version = "1.88"
 description = "CLI tool to capture a screen region, decode any QR code found, and copy the result to clipboard"
 repository = "https://github.com/x71c9/qrx"
 license = "MIT"
