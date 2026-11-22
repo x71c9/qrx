@@ -170,11 +170,7 @@ fn select_region(
         }
         break;
       }
-      Event::KeyPress(e) => {
-        if e.detail == 9 {
-          break;
-        }
-      }
+      Event::KeyPress(e) if e.detail == 9 => break,
       Event::Expose(_) => {
         draw_rect(conn, win, border_gc, 0, 0, sw - 1, sh - 1)?;
         if let Some((rx, ry, rw, rh)) = last_rect {
