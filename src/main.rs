@@ -9,6 +9,35 @@ fn main() {
   }
 }
 
+const HELP: &str = "\
+Selects a region of the screen, reads any QR code found in it, and copies
+the result to the clipboard. An image file is decoded instead of the screen
+when given.
+
+Usage:
+  qrx [-p] [-n] [file]
+
+  qrx                crop a screen region, copy to clipboard
+  qrx -p             crop a screen region, print and copy to clipboard
+  qrx -pn            crop a screen region, print only
+  qrx file.png       decode an image file, copy to clipboard
+  qrx -pn file.png   decode an image file, print only
+
+Options:
+  -p, --print          print the decoded text to stdout
+  -n, --no-clipboard   do not copy to the clipboard
+  -v, --version        print the version
+  -h, --help           show this help
+
+-p and -n combine as -pn or -np. On Linux the text is copied to both the
+clipboard and the primary selection.
+
+Dependencies:
+  X11       xclip
+  Wayland   slurp, grim, wl-copy
+  macOS     none; the terminal needs the Screen Recording permission
+";
+
 struct Args {
   print: bool,
   no_clipboard: bool,
@@ -32,7 +61,13 @@ fn parse_args() -> anyhow::Result<Args> {
         println!("{}", env!("CARGO_PKG_VERSION"));
         std::process::exit(0);
       }
-      s if s.starts_with('-') => anyhow::bail!("unknown flag: {s}"),
+      "-h" | "--help" => {
+        print!("{HELP}");
+        std::process::exit(0);
+      }
+      s if s.starts_with('-') => {
+        anyhow::bail!("unknown flag: {s} (see qrx --help)")
+      }
       _ => file = Some(std::path::PathBuf::from(&arg)),
     }
   }
