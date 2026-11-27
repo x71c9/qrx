@@ -1,6 +1,6 @@
 [package]
 name = "qrx"
-version = "0.4.4"
+version = "0.4.5"
 authors = ["x71c9 <mail@x71c9.com>"]
 edition = "2024"
 rust-version = "1.88"
